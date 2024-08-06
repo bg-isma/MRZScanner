@@ -178,11 +178,20 @@ public class QKMRZScannerView: UIView {
         ])
     }
     
+    private func getCamera(position: AVCaptureDevice.Position) -> AVCaptureDevice? {
+        if let camera = AVCaptureDevice.default(.builtInTripleCamera, for: .video, position: position) {
+            return camera
+        }
+        if let camera = AVCaptureDevice.default(.builtInDualCamera, for: .video, position: position) {
+            return camera
+        }
+        return AVCaptureDevice.default(for: .video)
+    }
+    
     fileprivate func initCaptureSession() {
         captureSession.sessionPreset = .hd1920x1080
         
-        guard let camera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) else {
-            print("Camera not accessible")
+        guard let camera = getCamera(position: .back) else {
             return
         }
         
